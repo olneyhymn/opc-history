@@ -1,0 +1,8 @@
+name: opc-history
+dependencies:
+- pip
+- python=2
+- ipython-notebook
+- requests
+- pip:
+    - python-twitter
