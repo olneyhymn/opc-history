@@ -18,9 +18,11 @@ def tweet(event, context):
         credentials = json.load(f)
     t = tw.Api(**credentials)
     try:
-        t.PostUpdate(status=get_today())
+        status = get_today()
+        t.PostUpdate(status=status)
+        return "Tweeted {}".format(status)
     except Exception as e:
-        print e
+        return e.message
 
 
 if __name__ == '__main__':
