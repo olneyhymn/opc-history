@@ -1,10 +1,7 @@
-import requests
 import re
 import datetime as dt
 import twitter as tw
 import json
-
-r = requests.request("GET", "http://opc.org/today.html?target=archive")
 
 
 def update_facebook(title, url):
@@ -15,11 +12,14 @@ def update_facebook(title, url):
 
     try:
         api.put_wall_post("", attachment={"link": url, "name": title})
+        return "Successfully posted to Facebook"
     except facebook.GraphAPIError as e:
-        print "Error", e
+        return "Error", e
 
 
 def get_today():
+    import requests
+    r = requests.request("GET", "http://opc.org/today.html?target=archive")
     for date, path, title in re.findall(r'<p>([A-Za-z]+ [0-9]+)<br /><a href="(.*?)">(.*?)</a></p>', r.text):
         if date == dt.datetime.now().strftime("%B %-d"):
             return title, "http://www.opc.org{}".format(path)
@@ -39,9 +39,11 @@ def update_twitter(title, url):
 
 def update(event=None, context=None):
     title, url = get_today()
-    update_facebook(title, url)
-    update_twitter(title, url)
+    fb_log = update_facebook(title, url)
+    twitter_log = update_twitter(title, url)
+
+    return "; ".join([fb_log, twitter_log[0]['message']])
 
 
 if __name__ == '__main__':
-    update()
+    print update()
