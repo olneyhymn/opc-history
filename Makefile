@@ -5,7 +5,7 @@ dependencies:
 prepare: dependencies
 	rm -f lambda_bundle.zip
 	zip lambda_bundle *
-	git clean --force -d --exclude *.zip
+	git ls-files --others --exclude-standard | xargs rm
 
 clean:
 	git clean -fd
