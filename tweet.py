@@ -34,15 +34,14 @@ def update_twitter(title, url):
         t.PostUpdate(status=status)
         return "Tweeted {}".format(status)
     except Exception as e:
-        return e.message
+        return e.message[0]['message']
 
 
 def update(event=None, context=None):
     title, url = get_today()
     fb_log = update_facebook(title, url)
     twitter_log = update_twitter(title, url)
-
-    return "; ".join([fb_log, twitter_log[0]['message']])
+    return "; ".join([fb_log, twitter_log])
 
 
 if __name__ == '__main__':
