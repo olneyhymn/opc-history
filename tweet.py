@@ -25,13 +25,21 @@ def get_today():
             return title, "http://www.opc.org{}".format(path)
 
 
+def get_image(url):
+    import requests
+    r = requests.request("GET", url)
+    m = re.search(r'img src="(.*?)".*historyimage', r.text)
+    return "http://www.opc.org{}".format(m.group(1))
+
+
 def update_twitter(title, url):
+    image_url = get_image(url)
     with open("twitter.json", "r") as f:
         credentials = json.load(f)
     t = tw.Api(**credentials)
     try:
         status = "{} {}".format(title, url)
-        t.PostUpdate(status=status)
+        t.PostMedia(status, image_url)
         return "Tweeted {}".format(status)
     except Exception as e:
         return e.message[0]['message']
