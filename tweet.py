@@ -49,7 +49,7 @@ def update(event=None, context=None):
     title, url = get_today()
     fb_log = update_facebook(title, url)
     twitter_log = update_twitter(title, url)
-    return "; ".join([fb_log, twitter_log])
+    return "{}; {}".format(fb_log, twitter_log)
 
 
 if __name__ == '__main__':
