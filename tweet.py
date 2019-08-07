@@ -9,7 +9,12 @@ def update_facebook(title, url):
     api = facebook.GraphAPI(os.environ["FACEBOOK_SECRET"].strip())
 
     try:
-        api.put_wall_post("", attachment={"link": url, "name": title})
+        api.put_object(
+            parent_object="me",
+            connection_name="feed",
+            message=f"Today in OPC History: {title}",
+            link=url
+        )
         return "Successfully posted to Facebook"
     except facebook.GraphAPIError as e:
         return "Error", e
