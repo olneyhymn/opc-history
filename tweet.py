@@ -1,14 +1,12 @@
 import re
 import datetime as dt
 import twitter as tw
-import json
+import os
 
 
 def update_facebook(title, url):
     import facebook
-    with open('facebook.txt', 'r') as f:
-        access_token = f.read().strip()
-    api = facebook.GraphAPI(access_token)
+    api = facebook.GraphAPI(os.environ["FACEBOOK_SECRET"].strip())
 
     try:
         api.put_wall_post("", attachment={"link": url, "name": title})
@@ -33,16 +31,17 @@ def get_image(url):
 
 
 def update_twitter(title, url):
-    image_url = get_image(url)
-    with open("twitter.json", "r") as f:
-        credentials = json.load(f)
-    t = tw.Api(**credentials)
-    try:
-        status = "{} {}".format(title, url)
-        t.PostMedia(status, image_url)
-        return "Tweeted {}".format(status)
-    except Exception as e:
-        return e.message[0]['message']
+    cred = {
+        "consumer_key": os.environ["CONSUMER_KEY"].strip(),
+        "consumer_secret": os.environ["CONSUMER_SECRET"].strip(),
+        "token": os.environ["TOKEN"].strip(),
+        "token_secret": os.environ["TOKEN_SECRET"].strip(),
+    }
+    auth = tw.OAuth(**cred)
+    t = tw.Twitter(auth=auth)
+
+    status = f"{title} {url} #OPChistory"
+    t.statuses.update(status=status)
 
 
 def update(event=None, context=None):
@@ -53,4 +52,4 @@ def update(event=None, context=None):
 
 
 if __name__ == '__main__':
-    print update()
+    print(update())

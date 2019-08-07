@@ -1,0 +1,26 @@
+
+service: philosophy-article
+
+provider:
+  name: aws
+  runtime: python3.6
+
+# you can overwrite defaults here
+  stage: prod
+  region: us-east-1
+
+  environment:
+
+    CONSUMER_KEY: ${ssm:opc_consumer_key}
+    CONSUMER_SECRET: ${ssm:opc_consumer_secret}
+    TOKEN: ${ssm:opc_access_token_key}
+    TOKEN_SECRET: ${ssm:opc_access_token_secret}
+
+functions:
+  hello:
+    handler: tweet.update
+
+    events:
+      - schedule: rate(1 day)
+
+
