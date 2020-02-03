@@ -23,6 +23,7 @@ def update_facebook(title, url):
 def get_today():
     import requests
     r = requests.request("GET", "http://opc.org/today.html?target=archive")
+    r.encoding = 'utf-8'
     for date, path, title in re.findall(r'<p>([A-Za-z]+ [0-9]+)<br /><a href="(.*?)">(.*?)</a></p>', r.text):
         if date == dt.datetime.now().strftime("%B %-d"):
             return title, "http://www.opc.org{}".format(path)
