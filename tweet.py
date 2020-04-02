@@ -22,7 +22,7 @@ def update_facebook(title, url):
 
 def get_today():
     import requests
-    r = requests.request("GET", "http://opc.org/today.html?target=archive")
+    r = requests.request("GET", "http://opc.org/today.html?target=archive", verify=False)
     r.encoding = 'utf-8'
     for date, path, title in re.findall(r'<p>([A-Za-z]+ [0-9]+)<br /><a href="(.*?)">(.*?)</a></p>', r.text):
         if date == dt.datetime.now().strftime("%B %-d"):
@@ -31,7 +31,7 @@ def get_today():
 
 def get_image(url):
     import requests
-    r = requests.request("GET", url)
+    r = requests.request("GET", url, verify=False)
     m = re.search(r'img src="(.*?)".*historyimage', r.text)
     return "http://www.opc.org{}".format(m.group(1))
 
