@@ -2,10 +2,10 @@ sudo: false
 language: python
 python:
   - "3.9"
+before_install:
+  - nvm install node 
 install: pip install -r requirements.txt
 before_script:
-  - npm install -g n
-  - n stable
   - node -v
   - npm install -g serverless
 script:
