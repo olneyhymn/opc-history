@@ -26,7 +26,7 @@ def get_today():
     previous = re.findall(r'<a class="navButton" href="(.*?)">Previous</a>', r.text)
     title = re.findall(r'<h2>(.*)</h2>', r.text)[0]
     r = requests.request("GET", f"http://opc.org{previous[0]}", verify=False)
-    link = "http://opc.org/" + re.findall(r'<a class="navButton" href="(.*?)">Next</a>', r.text)[0]
+    link = "http://opc.org" + re.findall(r'<a class="navButton" href="(.*?)">Next</a>', r.text)[0]
     return title, link
 
     
