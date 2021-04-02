@@ -2,6 +2,7 @@ import re
 import datetime as dt
 import twitter as tw
 import os
+import requests
 
 
 def update_facebook(title, url):
@@ -19,16 +20,17 @@ def update_facebook(title, url):
     except facebook.GraphAPIError as e:
         return "Error", e
 
-
+    
 def get_today():
-    import requests
-    r = requests.request("GET", "http://opc.org/today.html?target=archive", verify=False)
-    r.encoding = 'utf-8'
-    for date, path, title in re.findall(r'<p>([A-Za-z]+ [0-9]+)<br /><a href="(.*?)">(.*?)</a></p>', r.text):
-        if date == dt.datetime.now().strftime("%B %-d"):
-            return title, "http://www.opc.org{}".format(path)
+    r = requests.request("GET", "http://opc.org/today.html", verify=False)
+    previous = re.findall(r'<a class="navButton" href="(.*?)">Previous</a>', r.text)
+    if previous:
+        r = requests.request("GET", f"http://opc.org{previous[0]}", verify=False)
+        title = re.findall(r'<h2>(.*)</h2>', r.text)[0]
+        link = "http://opc.org/" + re.findall(r'<a class="navButton" href="(.*?)">Next</a>', r.text)[0]
+        return title, link
 
-
+    
 def get_image(url):
     import requests
     r = requests.request("GET", url, verify=False)
