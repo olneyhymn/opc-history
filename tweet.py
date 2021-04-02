@@ -24,11 +24,10 @@ def update_facebook(title, url):
 def get_today():
     r = requests.request("GET", "http://opc.org/today.html", verify=False)
     previous = re.findall(r'<a class="navButton" href="(.*?)">Previous</a>', r.text)
-    if previous:
-        r = requests.request("GET", f"http://opc.org{previous[0]}", verify=False)
-        title = re.findall(r'<h2>(.*)</h2>', r.text)[0]
-        link = "http://opc.org/" + re.findall(r'<a class="navButton" href="(.*?)">Next</a>', r.text)[0]
-        return title, link
+    title = re.findall(r'<h2>(.*)</h2>', r.text)[0]
+    r = requests.request("GET", f"http://opc.org{previous[0]}", verify=False)
+    link = "http://opc.org/" + re.findall(r'<a class="navButton" href="(.*?)">Next</a>', r.text)[0]
+    return title, link
 
     
 def get_image(url):
